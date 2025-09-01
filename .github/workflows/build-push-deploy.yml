@@ -49,7 +49,7 @@ jobs:
   #         cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO }}-frontend:buildcache,mode=max
 
   deploy:
-    needs: build-and-push
+    # needs: build-and-push
     runs-on: [self-hosted, minikube]
     steps:
       - name: Checkout (for k8s manifests)
