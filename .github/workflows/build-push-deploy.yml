@@ -50,7 +50,7 @@ jobs:
 
   deploy:
     # needs: build-and-push
-    runs-on: [self-hosted, minikube]
+    runs-on: [minikube,local,dind]
     steps:
       - name: Checkout (for k8s manifests)
         uses: actions/checkout@v4
