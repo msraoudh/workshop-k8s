@@ -60,16 +60,16 @@ jobs:
         with:
           version: 'latest'
 
-      - name: Write kubeconfig from secret
-        run: |
-               mkdir -p "$HOME/.kube"
-               cat > "$HOME/.kube/config" <<'EOF'
-                ${{ secrets.KUBE_CONFIG }}
-                EOF
-                sed -i 's/\r$//' "$HOME/.kube/config"
-                chmod 600 "$HOME/.kube/config"
-                head -n 5 "$HOME/.kube/config"
-                kubectl get all -A
+      # - name: Write kubeconfig from secret
+      #   run: |
+      #          mkdir -p "$HOME/.kube"
+      #          cat > "$HOME/.kube/config" <<'EOF'
+      #           ${{ secrets.KUBE_CONFIG }}
+      #           EOF
+      #           sed -i 's/\r$//' "$HOME/.kube/config"
+      #           chmod 600 "$HOME/.kube/config"
+      #           head -n 5 "$HOME/.kube/config"
+      #           kubectl get all -A
 
       # - name: Set image tags in manifests (optional)
       #   run: |
@@ -81,7 +81,6 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-           cat $HOME/.kube/config
            kubectl get all -A
       #     kubectl rollout status deploy/backend --timeout=120s || true
       #     kubectl rollout status deploy/frontend --timeout=120s || true
