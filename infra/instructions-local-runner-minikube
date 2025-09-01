@@ -1,0 +1,14 @@
+1-creation de cluster role , clusterrolebinding, serviceaccount (for githubaction runner)
+
+2-creation de secrets qui contient (repo url , token)
+
+
+3- creation de pod runner.yaml qui contient tout l'access runner vers minikube
+
+
+4- creation de ns myapp, mongodb via helm (statefulset) en utilisant values specific
+
+
+5- creation de secrets and configmaps pour la partie bd et backend
+
+

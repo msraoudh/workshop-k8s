@@ -1,0 +1,68 @@
+# save as runner.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gha-runner
+  namespace: gha-runners
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gha-runner
+  template:
+    metadata:
+      labels:
+        app: gha-runner
+    spec:
+      # DinD needs privileged in most setups
+      securityContext:
+        fsGroup: 1000
+      containers:
+        # Sidecar: Docker daemon-in-Docker
+        - name: dind
+          image: docker:dind
+          securityContext:
+            privileged: true
+          args: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""         # disable TLS for local dev
+          ports:
+            - containerPort: 2375
+          volumeMounts:
+            - name: dind-storage
+              mountPath: /var/lib/docker
+
+        # GitHub Actions runner
+        - name: runner
+          image: myoung34/github-runner:latest
+          env:
+            - name: REPO_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gha-runner-secrets
+                  key: REPO_URL
+            - name: RUNNER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gha-runner-secrets
+                  key: RUNNER_TOKEN
+            - name: RUNNER_NAME
+              value: minikube-runner-1
+            - name: RUNNER_LABELS
+              value: minikube,local,dind
+            - name: DOCKER_HOST
+              value: tcp://localhost:2375
+            - name: RUNNER_WORKDIR
+              value: /runner/_work
+            # Optional: set to "1" so runner removes itself on shutdown
+            - name: EPHEMERAL
+              value: "1"
+          volumeMounts:
+            - name: work
+              mountPath: /runner/_work
+      volumes:
+        - name: dind-storage
+          emptyDir: {}
+        - name: work
+          emptyDir: {}
