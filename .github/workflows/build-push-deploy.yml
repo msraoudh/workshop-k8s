@@ -64,7 +64,7 @@ jobs:
         run: |
             mkdir -p "$HOME/.kube"
             # Use printf to avoid adding a newline; decode once
-            printf '%s' "${{ secrets.KUBE_CONFIG_B64 }}" | base64 -d > "$HOME/.kube/config"
+            printf '%s' "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
             # Normalize line endings just in case
             sed -i 's/\r$//' "$HOME/.kube/config"
             chmod 600 "$HOME/.kube/config"
