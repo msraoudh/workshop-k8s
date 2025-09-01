@@ -42,11 +42,13 @@ jobs:
   #     # Frontend image
   build-and-push-job:
         runs-on: ubuntu-latest
-        needs: test-job 
         steps:
             - name: Clone Source Code
               uses: actions/checkout@v4 
 
+            - name: change directory
+              run: cd frontend-app
+              
             - name: Build Docker image
               run: docker build -t ${{ env.IMAGE_NAME }} --build-arg VITE_API_URL=${{ env.VITE_API_URL }}  .
 
@@ -55,6 +57,8 @@ jobs:
               with:
                 username: ${{  secrets.DOCKERHUB_USERNAME }}
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            
 
             - name: Tag Docker image with specific version
               run: docker tag ${{ env.IMAGE_NAME }}  ${{  secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_NUMBER }}
@@ -71,7 +75,7 @@ jobs:
 
 
   deploy:
-    # needs: build-and-push
+    needs: build-and-push
     runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Checkout (for k8s manifests)
