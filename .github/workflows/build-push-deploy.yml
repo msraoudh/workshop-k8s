@@ -65,6 +65,7 @@ jobs:
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
+          cat $HOME/.kube/config
           kubectl get all -A
 
       # - name: Set image tags in manifests (optional)
