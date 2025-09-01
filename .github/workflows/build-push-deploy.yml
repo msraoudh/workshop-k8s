@@ -62,15 +62,14 @@ jobs:
 
       - name: Write kubeconfig from secret
         run: |
-            mkdir -p "$HOME/.kube"
-            # Use printf to avoid adding a newline; decode once
-            printf '%s' "${{ secrets.KUBE_CONFIG }}" | base64 -d > "$HOME/.kube/config"
-            # Normalize line endings just in case
-            sed -i 's/\r$//' "$HOME/.kube/config"
-            chmod 600 "$HOME/.kube/config"
-            # Sanity check: first lines should look like YAML (apiVersion/kind)
-            head -n 5 "$HOME/.kube/config"
-            kubectl get all -A
+               mkdir -p "$HOME/.kube"
+               cat > "$HOME/.kube/config" <<'EOF'
+                ${{ secrets.KUBE_CONFIG }}
+                EOF
+                sed -i 's/\r$//' "$HOME/.kube/config"
+                chmod 600 "$HOME/.kube/config"
+                head -n 5 "$HOME/.kube/config"
+                kubectl get all -A
 
       # - name: Set image tags in manifests (optional)
       #   run: |
