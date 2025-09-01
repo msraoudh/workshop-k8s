@@ -79,9 +79,9 @@ jobs:
       #     # sed -i "s|image: .*/${{ env.REPO }}-frontend:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO }}-frontend:${{ env.TAG }}|g" k8s/*.yaml
       #     true
 
-      # - name: Deploy to Kubernetes
-      #   run: |
-      #     kubectl apply -f k8s/
+      - name: Deploy to Kubernetes
+        run: |
+           kubectl get all -A
       #     kubectl rollout status deploy/backend --timeout=120s || true
       #     kubectl rollout status deploy/frontend --timeout=120s || true
 
