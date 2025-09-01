@@ -40,7 +40,7 @@ jobs:
   #     #     cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.REPO }}-backend:buildcache,mode=max
 
   #     # Frontend image
-  build-and-push-job:
+  build-and-push:
         runs-on: ubuntu-latest
         steps:
             - name: Clone Source Code
@@ -48,7 +48,7 @@ jobs:
 
             - name: change directory
               run: cd frontend-app
-              
+
             - name: Build Docker image
               run: docker build -t ${{ env.IMAGE_NAME }} --build-arg VITE_API_URL=${{ env.VITE_API_URL }}  .
 
