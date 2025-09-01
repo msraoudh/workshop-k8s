@@ -81,6 +81,7 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
+           cat $HOME/.kube/config
            kubectl get all -A
       #     kubectl rollout status deploy/backend --timeout=120s || true
       #     kubectl rollout status deploy/frontend --timeout=120s || true
