@@ -95,6 +95,7 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl get all -A
+          kubectl apply -f kubernetes-manifests/deployment-front.yaml
           kubectl rollout status deploy/backend --timeout=120s || true
           kubectl rollout status deploy/frontend --timeout=120s || true
 
