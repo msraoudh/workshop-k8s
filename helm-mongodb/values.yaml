@@ -1,0 +1,45 @@
+# values-mongo.yaml
+architecture: standalone
+useStatefulSet: true
+auth:
+  rootUser: root
+  rootPassword: "rootpassword"           # dev-only sample
+  username: "appuser"
+  password: "apppassword"                # dev-only sample
+  database: "mydb"
+
+# 5Gi PVC via default storage class in Minikube
+persistence:
+  enabled: true
+  size: 5Gi
+
+# Healthchecks are built in; you can tune resources for minikube
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+# Optional: service naming stays predictable
+fullnameOverride: mongo
+nameOverride: mongo
+
+
+
+metrics:
+  enabled: true
+
+  # Expose a Service on port 9216
+  service:
+    ports:
+      metrics: 9216
+
+  # If you're using kube-prometheus-stack, expose a ServiceMonitor
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    # Label so your Prometheus picks it up (matches our earlier Prometheus config)
+    additionalLabels:
+      release: monitoring
+    interval: 30s
+    scrapeTimeout: 10s
+

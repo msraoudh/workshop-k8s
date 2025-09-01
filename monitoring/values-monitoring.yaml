@@ -1,0 +1,24 @@
+grafana:
+  adminPassword: "admin123"   # dev only; change in real env
+  defaultDashboardsTimezone: browser
+  service:
+    type: ClusterIP
+  # Optional: persistent storage for dashboards (uncomment to keep data)
+  # persistence:
+  #   enabled: true
+  #   size: 5Gi
+
+prometheus:
+  prometheusSpec:
+    # Allow discovering ServiceMonitors across namespaces
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorNamespaceSelector: {}   # all namespaces
+    podMonitorNamespaceSelector: {}       # all namespaces
+    # Keep default selector (release) so we can label our own monitors to be scraped
+    serviceMonitorSelector:
+      matchLabels:
+        release: monitoring
+    podMonitorSelector:
+      matchLabels:
+        release: monitoring
